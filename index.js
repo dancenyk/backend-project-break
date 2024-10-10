@@ -1,7 +1,7 @@
 const express = require ("express");
 const app = express();
 const PORT = process.env.PORT || 8080;
-const {dbConnection} = require("./config/config")
+const {dbConnection} = require("./config/db")
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
