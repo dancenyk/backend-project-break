@@ -2,14 +2,15 @@ const express = require ("express");
 const app = express();
 const PORT = process.env.PORT || 8080;
 const {dbConnection} = require("./config/db")
+const productRoutes = require("./routes/productRoutes")
+
+//middleware
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use("/", productRoutes)
 
-app.get("/", (req,res)=>{
-    res.send("<h1>hola</h1>")
-})
 
 dbConnection();
 
