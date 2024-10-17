@@ -63,19 +63,20 @@ const productController = {
         try{
             const productById = await Product.findById(req.params.productId);
             if (!productById){
-                return res.status(404).json({ message: "Product not founded"});
+                return res.status(404).json({ message: "Product not found"});
             }
             res.send(`
-            <form action="/dashboard" method="PUT">
-            <input type="text" name="name" placeholder="Product Name"/> <br>
-            <input type="text" name="description" placeholder="Product Description"/> <br>
-            <input type="number" name="price" placeholder="Product Price"/><br>
-            <input type="text" name="image" placeholder="Image URL" /> <br>
-            <input type="text" name="category" placeholder="Product Category"/> <br>
-            <input type="text" name="size" placeholder="Product Size"/> <br>
-            <input type="text" name="brand" placeholder="Brand"/> <br>
-            <input type="text" name="color" placeholder="Product Color"/> <br>
-            <input type="text" name="gender" placeholder="gender"><br>
+            <form action="/dashboard/${req.params.productId}" method="POST">
+            <input type="text" name="name" value="${productById.name}" placeholder="Product Name"/> <br>
+            <input type="text" name="description" value="${productById.description}" placeholder="Product Description"/> <br>
+            <input type="number" name="price" value="${productById.price}" placeholder="Product Price"/><br>
+             <input type="text" name="image" value="${productById.image}" placeholder="Image URL" /> <br>
+            <input type="text" name="category" value="${productById.category}" placeholder="Product Category"/> <br>
+            <input type="text" name="size" value="${productById.size}" placeholder="Product Size"/> <br>
+            <input type="text" name="brand" value="${productById.brand}" placeholder="Brand"/> <br>
+            <input type="text" name="color" value="${productById.color}" placeholder="Product Color"/> <br>
+            <input type="text" name="gender" value="${productById.gender}" placeholder="Gender"/><br>
+              
           
             <button type="submit">Save</button>
             </form>       
