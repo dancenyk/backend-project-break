@@ -6,6 +6,18 @@ Vamos a crear las rutas CRUD para los productos. Al usar formularios html, las r
 const express = require ("express");
 const router = express.Router();
 const Product = require("../models/Product")
+const productController = require("../controllers/Product.controller")
+
+
+//POST /dashboard: Crea un nuevo producto.
+router.post("/dashboard", productController.createProduct)
+
+//GET /products: Devuelve todos los productos. Cada producto tendrá un enlace a su página de detalle.
+router.get("/products", productController.showProducts)
+
+//GET /dashboard: Devuelve el dashboard del administrador. En el dashboard aparecerán todos los artículos que se hayan subido. Si clickamos en uno de ellos nos llevará a su página para poder actualizarlo o eliminarlo.
+router.get("/dashboard", productController.showProducts)
+
 
 router.get("/", (req,res)=>{
     res.send(`
@@ -32,32 +44,6 @@ router.get("/", (req,res)=>{
 })
 
 
-//GET /products: Devuelve todos los productos. Cada producto tendrá un enlace a su página de detalle.
-
-router.get("/products", async(req,res)=>{
-    try{
-        const products = await Product.find();
-        res.status(200).json(products)
-
-    }catch (error){
-        res.status(500).json({ message: "Error al obtener los productos", error });
-
-    }
-})
-//GET /dashboard: Devuelve el dashboard del administrador. En el dashboard aparecerán todos los artículos que se hayan subido. Si clickamos en uno de ellos nos llevará a su página para poder actualizarlo o eliminarlo.
-
-router.get("/dashboard", async (req,res)=>{
-    try{
-        const allProducts = await Product.find();
-        res.status(200).json(allProducts)
-
-    }catch(error){
-        res.status(500).json({ message: "Error al obtener los productos", error });
-
-    }
-})
-
-
 //GET /dashboard/new: Devuelve el formulario para subir un artículo nuevo.
 
 router.get("/dashboard/new", (req,res)=>{
@@ -79,15 +65,7 @@ router.get("/dashboard/new", (req,res)=>{
   `);
 })
 
-//POST /dashboard: Crea un nuevo producto.
-router.post("/dashboard", async(req,res)=>{
-    try{
-        const newProduct = await Product.create({...req.body}) 
-        res.status(201).json(newProduct);
-    }catch (error){
-        res.status(400).json({ message: "Error al crear el producto", error });
-    }
-})
+
 
 
 //PUT /dashboard/:productId: Actualiza un producto.
@@ -158,7 +136,7 @@ router.get("/dashboard/:productId/edit", async (req, res)=>{
             return res.status(404).json({ message: "Product not founded"});
         }
         res.send(`
-        <form action="/dashboard" method="POST">
+        <form action="/dashboard" method="PUT">
         <input type="text" name="name" placeholder="Product Name"/> <br>
         <input type="text" name="description" placeholder="Product Description"/> <br>
         <input type="number" name="price" placeholder="Product Price"/><br>
@@ -170,11 +148,7 @@ router.get("/dashboard/:productId/edit", async (req, res)=>{
         <input type="text" name="gender" placeholder="gender"><br>
       
         <button type="submit">Save</button>
-        <button type="button" onclick="window.location.reload();">Cancel</button>
-        </form>   
-        
-        
-        
+        </form>       
         `)
     }catch (error){
         res.status(500).json({ message: "Error al obtener los productos", error });
