@@ -66,7 +66,7 @@ const productController = {
                 return res.status(404).json({ message: "Product not founded"});
             }
             res.send(`
-            <form action="/dashboard" method="POST">
+            <form action="/dashboard" method="PUT">
             <input type="text" name="name" placeholder="Product Name"/> <br>
             <input type="text" name="description" placeholder="Product Description"/> <br>
             <input type="number" name="price" placeholder="Product Price"/><br>
@@ -127,13 +127,3 @@ const productController = {
 
 module.exports = productController
 
-/*
-
-showProducts: Devuelve la vista con todos los productos.
-showProductById: Devuelve la vista con el detalle de un producto.
-showNewProduct: Devuelve la vista con el formulario para subir un artículo nuevo.
-- createProduct: Crea un nuevo producto. Una vez creado, redirige a la vista de detalle del producto o a la vista de todos los productos del dashboard.
-showEditProduct: Devuelve la vista con el formulario para editar un producto.
-updateProduct: Actualiza un producto. Una vez actualizado, redirige a la vista de detalle del producto o a la vista de todos los productos del dashboard.
-deleteProduct: Elimina un producto. Una vez eliminado, redirige a la vista de todos los productos del dashboard.
-*/

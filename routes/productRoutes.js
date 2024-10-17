@@ -31,30 +31,5 @@ router.put("/dashboard/:productId", productController.updateProduct);
 router.delete("/dashboard/:productId/delete", productController.deleteProduct); 
 
 
-router.get("/", (req,res)=>{
-    res.send(`
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <header>
-        <nav>
-            <a href="#">Clothing</a>
-            <a href="#">Footwear</a>
-            <a href="#">Vitamins</a>
-            <a href="#">Accesories</a>
-            <a href="#">Login</a>
-        </nav>
-    </header>
-</body>
-</html>  
-    `)
-})
-
-
 module.exports = router; 
 
