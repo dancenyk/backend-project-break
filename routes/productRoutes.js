@@ -37,8 +37,7 @@ router.get("/", (req,res)=>{
 router.get("/products", async(req,res)=>{
     try{
         const products = await Product.find();
-        res.json(products)
-
+        res.status(200).json(products)
 
     }catch (error){
         res.status(500).json({ message: "Error al obtener los productos", error });
@@ -50,7 +49,7 @@ router.get("/products", async(req,res)=>{
 router.get("/dashboard", async (req,res)=>{
     try{
         const allProducts = await Product.find();
-        res.json(allProducts)
+        res.status(200).json(allProducts)
 
     }catch(error){
         res.status(500).json({ message: "Error al obtener los productos", error });
@@ -64,15 +63,15 @@ router.get("/dashboard", async (req,res)=>{
 router.get("/dashboard/new", (req,res)=>{
     res.send(`
     <form action="/dashboard" method="POST">
-      <input type="text" name="name" placeholder="Product Name" required /> <br>
-      <input type="text" name="description" placeholder="Product Description" required /> <br>
-      <input type="text" name="category" placeholder="Product Category" required /> <br>
-      <input type="text" name="brand" placeholder="Brand" required /> <br>
-      <input type="text" name="color" placeholder="Product Color" required /> <br>
-      <input type="text" name="image" placeholder="Image URL" required/> <br>
+      <input type="text" name="name" placeholder="Product Name" /> <br>
+      <input type="text" name="description" placeholder="Product Description" /> <br>
+      <input type="text" name="category" placeholder="Product Category"/> <br>
+      <input type="text" name="brand" placeholder="Brand" /> <br>
+      <input type="text" name="color" placeholder="Product Color" /> <br>
+      <input type="text" name="image" placeholder="Image URL"/> <br>
       <input type="text" name="size" placeholder="Product Size"/> <br>
       <input type="text" name="gender" placeholder="gender" /><br>
-      <input type="number" name="price" placeholder="Product Price" required /><br>
+      <input type="number" name="price" placeholder="Product Price" /><br>
       
       <button type="submit">Add Product</button>
     </form>
@@ -80,13 +79,10 @@ router.get("/dashboard/new", (req,res)=>{
   `);
 })
 
-
-
 //POST /dashboard: Crea un nuevo producto.
 router.post("/dashboard", async(req,res)=>{
     try{
-        const newProduct = new Product(req.body);
-        await newProduct.save();
+        const newProduct = await Product.create({...req.body}) 
         res.status(201).json(newProduct);
     }catch (error){
         res.status(400).json({ message: "Error al crear el producto", error });
@@ -101,11 +97,14 @@ router.put("/dashboard/:productId", async (req, res)=>{
         const idProduct = req.params.productId;
         const body = req.body;
 
-        const updatedProduct = await Product.findByIdAndUpdate(idProduct, body, {new: true});
+        const updatedProduct = await Product.findByIdAndUpdate( 
+            idProduct, 
+            body,
+            {new: true});
         if (!updatedProduct){
             return res.status(404).json({ message: "Product not founded"});
         }
-        res.json({ success: true, product:updatedProduct});
+        res.json(updatedProduct);
 
     }catch (error){
         res.status(500).json({ message: "Error al obtener los productos", error });
@@ -137,8 +136,7 @@ router.delete("/dashboard/:productId/delete", async (req, res)=>{
 
 router.get("/dashboard/:productId", async (req, res)=>{
     try{
-        const idProduct = req.params.productId;
-        const productById = await Product.findById(idProduct);
+        const productById = await Product.findById(req.params.productId);
         if (!productById){
             return res.status(404).json({ message: "Product not founded"});
         }
@@ -151,33 +149,44 @@ router.get("/dashboard/:productId", async (req, res)=>{
 }); 
 
 
-
-/*GET /dashboard/:productId/edit: Devuelve el formulario para editar un producto.
+//*GET /dashboard/:productId/edit: Devuelve el formulario para editar un producto.
 
 router.get("/dashboard/:productId/edit", async (req, res)=>{
     try{
-        const idProduct = req.params.productId;
-        const productById = await Product.findById(idProduct);
+        const productById = await Product.findById(req.params.productId);
         if (!productById){
             return res.status(404).json({ message: "Product not founded"});
         }
-        res.json(productById)
-
+        res.send(`
+        <form action="/dashboard" method="POST">
+        <input type="text" name="name" placeholder="Product Name"/> <br>
+        <input type="text" name="description" placeholder="Product Description"/> <br>
+        <input type="number" name="price" placeholder="Product Price"/><br>
+        <input type="text" name="image" placeholder="Image URL" /> <br>
+        <input type="text" name="category" placeholder="Product Category"/> <br>
+        <input type="text" name="size" placeholder="Product Size"/> <br>
+        <input type="text" name="brand" placeholder="Brand"/> <br>
+        <input type="text" name="color" placeholder="Product Color"/> <br>
+        <input type="text" name="gender" placeholder="gender"><br>
+      
+        <button type="submit">Save</button>
+        <button type="button" onclick="window.location.reload();">Cancel</button>
+        </form>   
+        
+        
+        
+        `)
     }catch (error){
         res.status(500).json({ message: "Error al obtener los productos", error });
 
     }
 }); 
-
-*/
-
 
 //GET /products/:productId: Devuelve el detalle de un producto.
 
 router.get("/products/:productId", async (req, res)=>{
     try{
-        const idProduct = req.params.productId;
-        const productById = await Product.findById(idProduct);
+        const productById = await Product.findById(req.params.productId);
         if (!productById){
             return res.status(404).json({ message: "Product not founded"});
         }
