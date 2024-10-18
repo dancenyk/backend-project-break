@@ -366,6 +366,7 @@ img {
   gap: 50px;
   margin-top: 30px;
   justify-content: center;
+  flex-wrap: wrap;
 
 }
 .product-card {
@@ -373,9 +374,8 @@ img {
   background-color:rgba(187, 182, 182, 0.764);
   border-radius: 12px;
   padding: 60px 60px;
-  width: 300px;
+  width: 250px;
   gap: 20px;
-  flex-wrap: wrap;
   justify-content: center; 
   align-items: center;    
   flex-direction: column;        
