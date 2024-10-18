@@ -1,4 +1,5 @@
 const Product = require("../models/Product.js")
+const {baseHtml, getNavBar, getProductCards, getProductbyId } = require ("../public/auxFunctions.js")
 
 const productController = {
     async createProduct (req,res) {
@@ -13,8 +14,10 @@ const productController = {
     async showProducts (req,res){
         try{
             const products = await Product.find();
-            res.status(200).json(products)
-    
+            const productCards = getProductCards(products);
+            const html = baseHtml() + getNavBar() + productCards;
+            res.send(html);
+            //res.status(200).json(products)
         }catch (error){
             res.status(500).json({ message: "Error al obtener los productos", error });
     
@@ -25,9 +28,11 @@ const productController = {
         try{
             const productById = await Product.findById(req.params.productId);
             if (!productById){
-                return res.status(404).json({ message: "Product not founded"});
+                return res.status(404).send("Product not found");
             }
-            res.json(productById)
+            const productDetails = getProductbyId(productById);
+            const html = baseHtml() + getNavBar() + productDetails;
+            res.send(html)
     
         }catch (error){
             res.status(500).json({ message: "Error al obtener los productos", error });
@@ -77,7 +82,6 @@ const productController = {
             <input type="text" name="color" value="${productById.color}" placeholder="Product Color"/> <br>
             <input type="text" name="gender" value="${productById.gender}" placeholder="Gender"/><br>
               
-          
             <button type="submit">Save</button>
             </form>       
             `)
