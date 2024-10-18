@@ -27,18 +27,18 @@ function baseHtml() {
 function getNavBar(categories){
     return `
     <nav>
-        <a href="#">Products</a>
-        <a href="#">Clothing</a>
-        <a href="#">Footwear</a>
-        <a href="#">Vitamins</a>
-        <a href="#">Accesories</a>
-        <a href="#">Login</a>
+        <a href="/products">Products</a>
+        <a href="/products?category=clothing">Clothing</a>
+        <a href="/products?category=footwear">Footwear</a>
+        <a href="/products?category=vitamins">Vitamins</a>
+        <a href="/products?category=accesories">Accessories</a>
+        <a href="/login">Login</a>
     </nav>
-    `
+    `;
 }
 
 function getProductCards(products) {
-    let html = '<div class="product-container">';;
+    let html = '<div class="product-container">';
     for (let product of products) {
       html += `
         <div class="product-card">
@@ -64,13 +64,11 @@ function getProductCards(products) {
           <h2>${product.name}</h2>
           <p>${product.description}</p>
           <p>${product.price}€</p>
+          <p>Category:${product.category}</p>
+          <p>Size:${product.size}</p>
         </div>
       `;
   }
-
-
-
-
 
   module.exports = {baseHtml, getNavBar, getProductCards, getProductbyId}
 
