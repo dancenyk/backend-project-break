@@ -6,9 +6,9 @@ const productController = {
     async createProduct (req,res) {
         try{
             const newProduct = await Product.create({...req.body}) 
-            res.status(201).json(newProduct);
+            res.redirect(`/dashboard/${newProduct._id}`);
         }catch (error){
-            res.status(400).json({ message: "Error al crear el producto", error });
+            res.status(500).json({ message: "Error al crear el producto", error });
         }
     },
 
@@ -37,7 +37,22 @@ const productController = {
                 return res.status(404).send("Product not found");
             }
             const productDetails = getProductbyId(productById);
-            const html = baseHtml() + getNavBar() + productDetails;
+
+            let buttonsCardId = ""
+            if (req.path.startsWith('/dashboard')){
+
+                buttonsCardId = `
+                <a href="/dashboard/${productById._id}/edit">
+                <button>Edit</button>
+                </a>
+
+                <a href="/dashboard/${productById._id}/delete">
+                <button>Delete</button>
+                </a>
+                `
+            }
+
+            const html = baseHtml() + getNavBar() + productDetails + buttonsCardId;
             res.send(html)
     
         }catch (error){
@@ -48,21 +63,22 @@ const productController = {
 
     async showNewProduct (req,res) {
         try{
-        res.send(`
-        <form action="/dashboard" method="POST">
-        <input type="text" name="name" placeholder="Product Name" /> <br>
-        <input type="text" name="description" placeholder="Product Description" /> <br>
-        <input type="text" name="category" placeholder="Product Category"/> <br>
-        <input type="text" name="brand" placeholder="Brand" /> <br>
-        <input type="text" name="color" placeholder="Product Color" /> <br>
-        <input type="text" name="image" placeholder="Image URL"/> <br>
-        <input type="text" name="size" placeholder="Product Size"/> <br>
-        <input type="text" name="gender" placeholder="gender" /><br>
-        <input type="number" name="price" placeholder="Product Price" /><br>
-        
-        <button type="submit">Add Product</button>
-        </form>
-        `);
+            const form = `
+             <form action="/dashboard" method="POST">
+                <input type="text" name="name" placeholder="Product Name" /> <br>
+                <input type="text" name="description" placeholder="Product Description" /> <br>
+                <input type="text" name="category" placeholder="Product Category"/> <br>
+                <input type="text" name="brand" placeholder="Brand" /> <br>
+                <input type="text" name="color" placeholder="Product Color" /> <br>
+                <input type="text" name="image" placeholder="Image URL"/> <br>
+                <input type="text" name="size" placeholder="Product Size"/> <br>
+                <input type="text" name="gender" placeholder="gender" /><br>
+                <input type="number" name="price" step="0.01" placeholder="Product Price" /><br>
+                <button type="submit">Add Product</button>
+            </form>
+            `
+            const html = baseHtml() + getNavBar() + form
+        res.send(html);
 
         } catch (error) {
         console.error("Error rendering new product form:", error);
@@ -76,11 +92,11 @@ const productController = {
             if (!productById){
                 return res.status(404).json({ message: "Product not found"});
             }
-            res.send(`
+            const form =`
             <form action="/dashboard/${req.params.productId}" method="POST">
             <input type="text" name="name" value="${productById.name}" placeholder="Product Name"/> <br>
             <input type="text" name="description" value="${productById.description}" placeholder="Product Description"/> <br>
-            <input type="number" name="price" value="${productById.price}" placeholder="Product Price"/><br>
+            <input type="number" name="price" step="0.01" value="${productById.price}" placeholder="Product Price"/><br>
              <input type="text" name="image" value="${productById.image}" placeholder="Image URL" /> <br>
             <input type="text" name="category" value="${productById.category}" placeholder="Product Category"/> <br>
             <input type="text" name="size" value="${productById.size}" placeholder="Product Size"/> <br>
@@ -90,10 +106,12 @@ const productController = {
               
             <button type="submit">Save</button>
             </form>       
-            `)
+            `
+            res.send( baseHtml() + getNavBar() + form
+            )
         }catch (error){
             res.status(500).json({ message: "Error al obtener los productos", error });
-    
+
         }
 
     },
@@ -109,9 +127,9 @@ const productController = {
                     body,
                     {new: true});
                 if (!updatedProduct){
-                    return res.status(404).json({ message: "Product not founded"});
+                    return res.status(404).json({ message: "Product not found"});
                 }
-                res.json(updatedProduct);
+                res.redirect(`/dashboard/${updatedProduct._id}`);
         
             }catch (error){
                 res.status(500).json({ message: "Error al obtener los productos", error });
