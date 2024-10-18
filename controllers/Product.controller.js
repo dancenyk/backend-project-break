@@ -1,6 +1,7 @@
 const Product = require("../models/Product.js")
 const {baseHtml, getNavBar, getProductCards, getProductbyId } = require ("../public/auxFunctions.js")
 
+
 const productController = {
     async createProduct (req,res) {
         try{
@@ -13,13 +14,18 @@ const productController = {
 
     async showProducts (req,res){
         try{
-            const products = await Product.find();
+            const category = req.query.category
+            let products;
+            if (category){
+                products = await Product.find({ category: category });
+            }else {
+                products = await Product.find();
+            }
             const productCards = getProductCards(products);
             const html = baseHtml() + getNavBar() + productCards;
             res.send(html);
-            //res.status(200).json(products)
         }catch (error){
-            res.status(500).json({ message: "Error al obtener los productos", error });
+            res.status(500).send("Error al obtener los productos", error)
     
         }
     },
@@ -35,7 +41,7 @@ const productController = {
             res.send(html)
     
         }catch (error){
-            res.status(500).json({ message: "Error al obtener los productos", error });
+            res.status(500).send({ message: "Error al obtener los productos" });
     
         }
     },
