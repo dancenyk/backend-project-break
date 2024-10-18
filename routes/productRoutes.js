@@ -3,6 +3,10 @@ const router = express.Router();
 const Product = require("../models/Product")
 const productController = require("../controllers/Product.controller")
 
+router.get('/', (req, res) => {
+    res.redirect("/products");
+  });
+  
 //GET /products: Devuelve todos los productos. Cada producto tendrá un enlace a su página de detalle.
 router.get("/products", productController.showProducts)
 
@@ -15,14 +19,17 @@ router.get("/dashboard", productController.showProducts)
 //GET /dashboard/new: Devuelve el formulario para subir un artículo nuevo.
 router.get("/dashboard/new", productController.showNewProduct)
 
-//GET /dashboard/:productId: Devuelve el detalle de un producto en el dashboard.
-router.get("/dashboard/:productId", productController.showProductById); 
-
 //GET /dashboard/:productId/edit: Devuelve el formulario para editar un producto.
 router.get("/dashboard/:productId/edit", productController.showEditProduct); 
 
+//GET /dashboard/:productId: Devuelve el detalle de un producto en el dashboard.
+router.get("/dashboard/:productId", productController.showProductById); 
+
 //POST /dashboard: Crea un nuevo producto.
 router.post("/dashboard", productController.createProduct)
+
+//POST /dashboard/:productId: Actualiza un producto desde un form
+router.post("/dashboard/:productId", productController.updateProduct); 
 
 //PUT /dashboard/:productId: Actualiza un producto.
 router.put("/dashboard/:productId", productController.updateProduct); 
