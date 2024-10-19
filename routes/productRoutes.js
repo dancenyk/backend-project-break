@@ -63,13 +63,23 @@ router.post("/register", async (req, res)=>{
   }
 })
 
-
 //Login
 
 router.get("/login", (req, res)=>{
   res.sendFile(path.join(__dirname, '../public/views', "login.html"))
 })
 
+router.post("/login", async (req, res)=>{
+  const { idToken } = req.body;
+  try{
+    await auth.verifyIdToken(idToken)
+    res.cookie("token", idToken, { httpOnly: true, secure: false });
+    res.json({ success: true }); 
+  }catch (error){
+    console.log(`Error al verificar el token: ${error}`);
+
+  }
+
+})
 
 module.exports = router; 
-
