@@ -1,7 +1,10 @@
 const express = require ("express");
 const router = express.Router();
-const Product = require("../models/Product")
-const productController = require("../controllers/Product.controller")
+const Product = require("../models/Product");
+const productController = require("../controllers/Product.controller");
+const path = require("path");
+const admin = require("firebase-admin");
+const auth = admin.auth();
 
 router.get('/', (req, res) => {
     res.redirect("/products");
@@ -36,6 +39,36 @@ router.put("/dashboard/:productId", productController.updateProduct);
 
 // DELETE /dashboard/:productId/delete: Elimina un producto.
 router.delete("/dashboard/:productId/delete", productController.deleteProduct); 
+
+
+
+//Register
+router.get("/register", (req, res)=>{
+  res.sendFile(path.join(__dirname, '../public/views', "register.html"))
+})
+
+router.post("/register", async (req, res)=>{
+  const {email, password} = req.body
+  try {
+    await auth.createUser({
+      email,
+      password
+    });
+    res.redirect("/login")
+
+
+  }catch (error){
+    console.error(`error interno:${error}`)
+    res.redirect("/register")
+  }
+})
+
+
+//Login
+
+router.get("/login", (req, res)=>{
+  res.sendFile(path.join(__dirname, '../public/views', "login.html"))
+})
 
 
 module.exports = router; 
