@@ -1,10 +1,15 @@
 const express = require ("express");
 const router = express.Router();
 const Product = require("../models/Product");
+
 const productController = require("../controllers/Product.controller");
+const productApiController = require("../controllers/ApiControllers.js"); 
+
 const path = require("path");
 const admin = require("firebase-admin");
 const auth = admin.auth();
+
+
 
 router.get('/', (req, res) => {
     res.redirect("/products");
@@ -41,6 +46,12 @@ router.put("/dashboard/:productId", productController.updateProduct);
 router.delete("/dashboard/:productId/delete", productController.deleteProduct); 
 
 
+// Rutas API
+router.get("/api/products", productApiController.showProducts);
+router.get("/api/products/:productId", productApiController.showProductById);
+router.post("/api/products", productApiController.createProduct);
+router.put("/api/products/:productId", productApiController.updateProduct);
+router.delete("/api/products/:productId", productApiController.deleteProduct);
 
 //Register
 router.get("/register", (req, res)=>{

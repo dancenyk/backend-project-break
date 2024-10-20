@@ -1,7 +1,7 @@
 const Product = require("../models/Product.js")
 
 
-const productController = {
+const productApiController = {
    async createProduct (req,res) {
        try{
            const newProduct = await Product.create({...req.body})
@@ -132,4 +132,4 @@ const productController = {
    }
 }
 
-module.exports = productController
+module.exports = productApiController
