@@ -23,7 +23,6 @@ npm -v
  https://github.com/dancenyk/backend-project-break
 
 - Paso 4: Clona el repositorio 
- git clone https://github.com/tuusuario/backend-project-break
 
 - Paso 5: Instala las dependencias
  npm install express dotenv mongoose 
