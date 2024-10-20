@@ -69,17 +69,20 @@ router.get("/login", (req, res)=>{
   res.sendFile(path.join(__dirname, '../public/views', "login.html"))
 })
 
-router.post("/login", async (req, res)=>{
+router.post('/login', async (req, res) => {
   const { idToken } = req.body;
-  try{
-    await auth.verifyIdToken(idToken)
-    res.cookie("token", idToken, { httpOnly: true, secure: false });
-    res.json({ success: true }); 
-  }catch (error){
-    console.log(`Error al verificar el token: ${error}`);
+  try {
+    // Verifica el ID token
+    await auth.verifyIdToken(idToken);
 
+    // Guardar el ID token en una cookie
+    res.cookie('token', idToken, { httpOnly: true, secure: false }); // Usa secure: true en producción. Es un atributo de los navegadores para las cookies y evitar XXS
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error verifying ID token:', error);
+    res.status(401).json({ error: 'Invalid token' });
   }
+});
 
-})
 
 module.exports = router; 
